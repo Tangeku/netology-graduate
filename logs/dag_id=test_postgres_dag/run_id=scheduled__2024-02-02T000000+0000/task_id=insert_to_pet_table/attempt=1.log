@@ -1,0 +1,42 @@
+[2024-07-07T08:24:41.629+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2024-07-07T08:24:41.669+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: test_postgres_dag.insert_to_pet_table scheduled__2024-02-02T00:00:00+00:00 [queued]>
+[2024-07-07T08:24:41.681+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: test_postgres_dag.insert_to_pet_table scheduled__2024-02-02T00:00:00+00:00 [queued]>
+[2024-07-07T08:24:41.683+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 1
+[2024-07-07T08:24:41.709+0000] {taskinstance.py:2330} INFO - Executing <Task(PostgresOperator): insert_to_pet_table> on 2024-02-02 00:00:00+00:00
+[2024-07-07T08:24:41.718+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:61: DeprecationWarning: This process (pid=254) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2024-07-07T08:24:41.721+0000] {standard_task_runner.py:63} INFO - Started process 255 to run task
+[2024-07-07T08:24:41.721+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'test_postgres_dag', 'insert_to_pet_table', 'scheduled__2024-02-02T00:00:00+00:00', '--job-id', '8', '--raw', '--subdir', 'DAGS_FOLDER/test.py', '--cfg-path', '/tmp/tmp24uc5xfd']
+[2024-07-07T08:24:41.723+0000] {standard_task_runner.py:91} INFO - Job 8: Subtask insert_to_pet_table
+[2024-07-07T08:24:41.826+0000] {task_command.py:426} INFO - Running <TaskInstance: test_postgres_dag.insert_to_pet_table scheduled__2024-02-02T00:00:00+00:00 [running]> on host df5998cef174
+[2024-07-07T08:24:41.966+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='test_postgres_dag' AIRFLOW_CTX_TASK_ID='insert_to_pet_table' AIRFLOW_CTX_EXECUTION_DATE='2024-02-02T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2024-02-02T00:00:00+00:00'
+[2024-07-07T08:24:41.967+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2024-07-07T08:24:41.986+0000] {sql.py:276} INFO - Executing: 
+            INSERT INTO pet (pet_id, name, pet_type, birth_date, owner)
+            VALUES (1, 'Max', 'Dog', '2018-07-05', 'Jane');
+            INSERT INTO pet (pet_id, name, pet_type, birth_date, owner)
+            VALUES (2, 'Susie', 'Cat', '2019-05-01', 'Phil');
+            INSERT INTO pet (pet_id, name, pet_type, birth_date, owner)
+            VALUES (3, 'Lester', 'Hamster', '2020-06-23', 'Lily');
+            INSERT INTO pet (pet_id, name, pet_type, birth_date, owner)
+            VALUES (4, 'Quincy', 'Parrot', '2013-08-11', 'Anne');
+            
+[2024-07-07T08:24:42.002+0000] {base.py:84} INFO - Using connection ID 'postgres-netology' for task execution.
+[2024-07-07T08:24:42.018+0000] {base.py:84} INFO - Using connection ID 'postgres-netology' for task execution.
+[2024-07-07T08:24:42.037+0000] {sql.py:487} INFO - Running statement: 
+            INSERT INTO pet (pet_id, name, pet_type, birth_date, owner)
+            VALUES (1, 'Max', 'Dog', '2018-07-05', 'Jane');
+            INSERT INTO pet (pet_id, name, pet_type, birth_date, owner)
+            VALUES (2, 'Susie', 'Cat', '2019-05-01', 'Phil');
+            INSERT INTO pet (pet_id, name, pet_type, birth_date, owner)
+            VALUES (3, 'Lester', 'Hamster', '2020-06-23', 'Lily');
+            INSERT INTO pet (pet_id, name, pet_type, birth_date, owner)
+            VALUES (4, 'Quincy', 'Parrot', '2013-08-11', 'Anne');
+            , parameters: None
+[2024-07-07T08:24:42.041+0000] {sql.py:496} INFO - Rows affected: 1
+[2024-07-07T08:24:42.044+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2024-07-07T08:24:42.062+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=test_postgres_dag, task_id=insert_to_pet_table, run_id=scheduled__2024-02-02T00:00:00+00:00, execution_date=20240202T000000, start_date=20240707T082441, end_date=20240707T082442
+[2024-07-07T08:24:42.098+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 0
+[2024-07-07T08:24:42.143+0000] {taskinstance.py:3503} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2024-07-07T08:24:42.146+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

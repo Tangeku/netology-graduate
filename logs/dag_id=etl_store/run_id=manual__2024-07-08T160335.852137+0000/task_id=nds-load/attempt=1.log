@@ -1,0 +1,31 @@
+[2024-07-08T16:03:39.839+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2024-07-08T16:03:39.881+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: etl_store.nds-load manual__2024-07-08T16:03:35.852137+00:00 [queued]>
+[2024-07-08T16:03:39.896+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: etl_store.nds-load manual__2024-07-08T16:03:35.852137+00:00 [queued]>
+[2024-07-08T16:03:39.897+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 1
+[2024-07-08T16:03:39.918+0000] {taskinstance.py:2330} INFO - Executing <Task(PythonOperator): nds-load> on 2024-07-08 16:03:35.852137+00:00
+[2024-07-08T16:03:39.926+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:61: DeprecationWarning: This process (pid=244) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2024-07-08T16:03:39.927+0000] {standard_task_runner.py:63} INFO - Started process 246 to run task
+[2024-07-08T16:03:39.928+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'etl_store', 'nds-load', 'manual__2024-07-08T16:03:35.852137+00:00', '--job-id', '36', '--raw', '--subdir', 'DAGS_FOLDER/etl_store.py', '--cfg-path', '/tmp/tmp1uz6h5jh']
+[2024-07-08T16:03:39.930+0000] {standard_task_runner.py:91} INFO - Job 36: Subtask nds-load
+[2024-07-08T16:03:39.989+0000] {task_command.py:426} INFO - Running <TaskInstance: etl_store.nds-load manual__2024-07-08T16:03:35.852137+00:00 [running]> on host a58d746d8a30
+[2024-07-08T16:03:40.087+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='etl_store' AIRFLOW_CTX_TASK_ID='nds-load' AIRFLOW_CTX_EXECUTION_DATE='2024-07-08T16:03:35.852137+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2024-07-08T16:03:35.852137+00:00'
+[2024-07-08T16:03:40.088+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2024-07-08T16:03:40.131+0000] {base.py:84} INFO - Using connection ID 'postgres-netology' for task execution.
+[2024-07-08T16:03:40.229+0000] {base.py:84} INFO - Using connection ID 'postgres-netology' for task execution.
+[2024-07-08T16:03:40.325+0000] {base.py:84} INFO - Using connection ID 'postgres-netology' for task execution.
+[2024-07-08T16:03:40.409+0000] {base.py:84} INFO - Using connection ID 'postgres-netology' for task execution.
+[2024-07-08T16:03:40.498+0000] {base.py:84} INFO - Using connection ID 'postgres-netology' for task execution.
+[2024-07-08T16:03:40.591+0000] {base.py:84} INFO - Using connection ID 'postgres-netology' for task execution.
+[2024-07-08T16:03:40.685+0000] {base.py:84} INFO - Using connection ID 'postgres-netology' for task execution.
+[2024-07-08T16:03:40.729+0000] {base.py:84} INFO - Using connection ID 'postgres-netology' for task execution.
+[2024-07-08T16:03:40.888+0000] {python.py:237} INFO - Done. Returned value was: None
+[2024-07-08T16:03:40.888+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2024-07-08T16:03:40.900+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=etl_store, task_id=nds-load, run_id=manual__2024-07-08T16:03:35.852137+00:00, execution_date=20240708T160335, start_date=20240708T160339, end_date=20240708T160340
+[2024-07-08T16:03:40.944+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 0
+[2024-07-08T16:03:40.959+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/models/baseoperator.py:1297: AirflowProviderDeprecationWarning: Call to deprecated class PostgresOperator. (Please use `***.providers.common.sql.operators.sql.SQLExecuteQueryOperator`.Also, you can provide `hook_params={'schema': <database>}`.)
+  result = cls.__new__(cls)
+
+[2024-07-08T16:03:40.975+0000] {taskinstance.py:3503} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2024-07-08T16:03:40.978+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

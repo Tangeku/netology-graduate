@@ -1,0 +1,61 @@
+[2024-07-08T16:24:41.549+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2024-07-08T16:24:41.592+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: etl_store.dds-load manual__2024-07-08T16:18:08.118541+00:00 [queued]>
+[2024-07-08T16:24:41.604+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: etl_store.dds-load manual__2024-07-08T16:18:08.118541+00:00 [queued]>
+[2024-07-08T16:24:41.606+0000] {taskinstance.py:2306} INFO - Starting attempt 3 of 3
+[2024-07-08T16:24:41.623+0000] {taskinstance.py:2330} INFO - Executing <Task(PostgresOperator): dds-load> on 2024-07-08 16:18:08.118541+00:00
+[2024-07-08T16:24:41.630+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:61: DeprecationWarning: This process (pid=600) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2024-07-08T16:24:41.631+0000] {standard_task_runner.py:63} INFO - Started process 602 to run task
+[2024-07-08T16:24:41.632+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'etl_store', 'dds-load', 'manual__2024-07-08T16:18:08.118541+00:00', '--job-id', '63', '--raw', '--subdir', 'DAGS_FOLDER/etl_store.py', '--cfg-path', '/tmp/tmptkx21tvb']
+[2024-07-08T16:24:41.635+0000] {standard_task_runner.py:91} INFO - Job 63: Subtask dds-load
+[2024-07-08T16:24:41.705+0000] {task_command.py:426} INFO - Running <TaskInstance: etl_store.dds-load manual__2024-07-08T16:18:08.118541+00:00 [running]> on host a58d746d8a30
+[2024-07-08T16:24:41.820+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='etl_store' AIRFLOW_CTX_TASK_ID='dds-load' AIRFLOW_CTX_EXECUTION_DATE='2024-07-08T16:18:08.118541+00:00' AIRFLOW_CTX_TRY_NUMBER='3' AIRFLOW_CTX_DAG_RUN_ID='manual__2024-07-08T16:18:08.118541+00:00'
+[2024-07-08T16:24:41.821+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2024-07-08T16:24:41.835+0000] {sql.py:276} INFO - Executing: 
+    insert into dds.fact_sales (invoice_id, branch, city, customer_type, gender, product_line, unit_price, quantity, "tax_5%",
+        total, date, time, payment, cogs, gross_margin_percentage, gross_income, rating)
+        (select distinct 
+            invoice_id, branch, city, customer_type, gender, 
+            product_line, unit_price, quantity, "tax_5%", total, date::date,
+            time, payment, cogs, gross_margin_percentage, gross_income, rating 
+        from nds.fact_sales where invoice_id not in (select distinct invoice_id FROM dds.fact_sales));
+[2024-07-08T16:24:41.850+0000] {base.py:84} INFO - Using connection ID 'postgres-netology' for task execution.
+[2024-07-08T16:24:41.862+0000] {base.py:84} INFO - Using connection ID 'postgres-netology' for task execution.
+[2024-07-08T16:24:41.876+0000] {sql.py:487} INFO - Running statement: 
+    insert into dds.fact_sales (invoice_id, branch, city, customer_type, gender, product_line, unit_price, quantity, "tax_5%",
+        total, date, time, payment, cogs, gross_margin_percentage, gross_income, rating)
+        (select distinct 
+            invoice_id, branch, city, customer_type, gender, 
+            product_line, unit_price, quantity, "tax_5%", total, date::date,
+            time, payment, cogs, gross_margin_percentage, gross_income, rating 
+        from nds.fact_sales where invoice_id not in (select distinct invoice_id FROM dds.fact_sales));, parameters: None
+[2024-07-08T16:24:41.887+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2024-07-08T16:24:41.888+0000] {taskinstance.py:2905} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 465, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 432, in _execute_callable
+    return execute_callable(context=context, **execute_callable_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/baseoperator.py", line 401, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/providers/common/sql/operators/sql.py", line 282, in execute
+    output = hook.run(
+             ^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/providers/common/sql/hooks/sql.py", line 435, in run
+    self._run_command(cur, sql_statement, parameters)
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/providers/common/sql/hooks/sql.py", line 492, in _run_command
+    cur.execute(sql_statement)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "fact_sales" violates foreign key constraint "fact_sales_customer_type_fkey"
+DETAIL:  Key (customer_type)=(0) is not present in table "dim_customer_type".
+
+[2024-07-08T16:24:41.905+0000] {taskinstance.py:1206} INFO - Marking task as FAILED. dag_id=etl_store, task_id=dds-load, run_id=manual__2024-07-08T16:18:08.118541+00:00, execution_date=20240708T161808, start_date=20240708T162441, end_date=20240708T162441
+[2024-07-08T16:24:41.919+0000] {standard_task_runner.py:110} ERROR - Failed to execute job 63 for task dds-load (insert or update on table "fact_sales" violates foreign key constraint "fact_sales_customer_type_fkey"
+DETAIL:  Key (customer_type)=(0) is not present in table "dim_customer_type".
+; 602)
+[2024-07-08T16:24:41.927+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 1
+[2024-07-08T16:24:41.951+0000] {taskinstance.py:3503} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2024-07-08T16:24:41.954+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

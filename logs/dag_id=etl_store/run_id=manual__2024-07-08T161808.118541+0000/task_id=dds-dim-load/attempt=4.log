@@ -1,0 +1,61 @@
+[2024-07-08T16:26:46.442+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2024-07-08T16:26:46.478+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: etl_store.dds-dim-load manual__2024-07-08T16:18:08.118541+00:00 [queued]>
+[2024-07-08T16:26:46.489+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: etl_store.dds-dim-load manual__2024-07-08T16:18:08.118541+00:00 [queued]>
+[2024-07-08T16:26:46.490+0000] {taskinstance.py:2306} INFO - Starting attempt 4 of 4
+[2024-07-08T16:26:46.504+0000] {taskinstance.py:2330} INFO - Executing <Task(PostgresOperator): dds-dim-load> on 2024-07-08 16:18:08.118541+00:00
+[2024-07-08T16:26:46.510+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:61: DeprecationWarning: This process (pid=633) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2024-07-08T16:26:46.511+0000] {standard_task_runner.py:63} INFO - Started process 635 to run task
+[2024-07-08T16:26:46.512+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'etl_store', 'dds-dim-load', 'manual__2024-07-08T16:18:08.118541+00:00', '--job-id', '67', '--raw', '--subdir', 'DAGS_FOLDER/etl_store.py', '--cfg-path', '/tmp/tmpw0lciiz0']
+[2024-07-08T16:26:46.514+0000] {standard_task_runner.py:91} INFO - Job 67: Subtask dds-dim-load
+[2024-07-08T16:26:46.574+0000] {task_command.py:426} INFO - Running <TaskInstance: etl_store.dds-dim-load manual__2024-07-08T16:18:08.118541+00:00 [running]> on host a58d746d8a30
+[2024-07-08T16:26:46.694+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='etl_store' AIRFLOW_CTX_TASK_ID='dds-dim-load' AIRFLOW_CTX_EXECUTION_DATE='2024-07-08T16:18:08.118541+00:00' AIRFLOW_CTX_TRY_NUMBER='4' AIRFLOW_CTX_DAG_RUN_ID='manual__2024-07-08T16:18:08.118541+00:00'
+[2024-07-08T16:26:46.696+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2024-07-08T16:26:46.717+0000] {sql.py:276} INFO - Executing: 
+    insert into dds.dim_branch (branch)
+        (select branch from nds.dim_branch where branch not in (select branch from dds.dim_branch));
+
+    insert into dds.dim_city (city)
+        (select city from nds.dim_city where city not in (select city from dds.dim_city));
+
+    insert into dds.dim_customer_type (customer_type)
+        (select customer_type from nds.dim_customer_type where customer_type not in (select customer_type from dds.dim_customer_type));
+
+    insert into dds.dim_gender (gender)
+        (select gender from nds.dim_gender where gender not in (select gender from dds.dim_gender));
+
+    insert into dds.dim_product_line (product_line)
+        (select product_line from nds.dim_product_line where product_line not in (select product_line from dds.dim_product_line));
+    
+    insert into dds.dim_payment (payment)
+        (select payment from nds.dim_payment where payment not in (select payment from dds.dim_payment));
+[2024-07-08T16:26:46.735+0000] {base.py:84} INFO - Using connection ID 'postgres-netology' for task execution.
+[2024-07-08T16:26:46.749+0000] {base.py:84} INFO - Using connection ID 'postgres-netology' for task execution.
+[2024-07-08T16:26:46.768+0000] {sql.py:487} INFO - Running statement: 
+    insert into dds.dim_branch (branch)
+        (select branch from nds.dim_branch where branch not in (select branch from dds.dim_branch));
+
+    insert into dds.dim_city (city)
+        (select city from nds.dim_city where city not in (select city from dds.dim_city));
+
+    insert into dds.dim_customer_type (customer_type)
+        (select customer_type from nds.dim_customer_type where customer_type not in (select customer_type from dds.dim_customer_type));
+
+    insert into dds.dim_gender (gender)
+        (select gender from nds.dim_gender where gender not in (select gender from dds.dim_gender));
+
+    insert into dds.dim_product_line (product_line)
+        (select product_line from nds.dim_product_line where product_line not in (select product_line from dds.dim_product_line));
+    
+    insert into dds.dim_payment (payment)
+        (select payment from nds.dim_payment where payment not in (select payment from dds.dim_payment));, parameters: None
+[2024-07-08T16:26:46.775+0000] {sql.py:496} INFO - Rows affected: 3
+[2024-07-08T16:26:46.778+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2024-07-08T16:26:46.794+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=etl_store, task_id=dds-dim-load, run_id=manual__2024-07-08T16:18:08.118541+00:00, execution_date=20240708T161808, start_date=20240708T162646, end_date=20240708T162646
+[2024-07-08T16:26:46.847+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 0
+[2024-07-08T16:26:46.910+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/models/baseoperator.py:1297: AirflowProviderDeprecationWarning: Call to deprecated class PostgresOperator. (Please use `***.providers.common.sql.operators.sql.SQLExecuteQueryOperator`.Also, you can provide `hook_params={'schema': <database>}`.)
+  result = cls.__new__(cls)
+
+[2024-07-08T16:26:46.928+0000] {taskinstance.py:3503} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2024-07-08T16:26:46.931+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

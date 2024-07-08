@@ -1,0 +1,52 @@
+[2024-07-08T15:52:26.800+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2024-07-08T15:52:26.845+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: etl_store.nds-load manual__2024-07-08T15:52:19.670180+00:00 [queued]>
+[2024-07-08T15:52:26.854+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: etl_store.nds-load manual__2024-07-08T15:52:19.670180+00:00 [queued]>
+[2024-07-08T15:52:26.855+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 1
+[2024-07-08T15:52:26.872+0000] {taskinstance.py:2330} INFO - Executing <Task(PythonOperator): nds-load> on 2024-07-08 15:52:19.670180+00:00
+[2024-07-08T15:52:26.880+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:61: DeprecationWarning: This process (pid=76) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2024-07-08T15:52:26.881+0000] {standard_task_runner.py:63} INFO - Started process 78 to run task
+[2024-07-08T15:52:26.881+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'etl_store', 'nds-load', 'manual__2024-07-08T15:52:19.670180+00:00', '--job-id', '27', '--raw', '--subdir', 'DAGS_FOLDER/etl_store.py', '--cfg-path', '/tmp/tmp5rl6u05j']
+[2024-07-08T15:52:26.883+0000] {standard_task_runner.py:91} INFO - Job 27: Subtask nds-load
+[2024-07-08T15:52:26.965+0000] {task_command.py:426} INFO - Running <TaskInstance: etl_store.nds-load manual__2024-07-08T15:52:19.670180+00:00 [running]> on host a58d746d8a30
+[2024-07-08T15:52:27.084+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='etl_store' AIRFLOW_CTX_TASK_ID='nds-load' AIRFLOW_CTX_EXECUTION_DATE='2024-07-08T15:52:19.670180+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2024-07-08T15:52:19.670180+00:00'
+[2024-07-08T15:52:27.085+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2024-07-08T15:52:27.156+0000] {base.py:84} INFO - Using connection ID 'postgres-netology' for task execution.
+[2024-07-08T15:52:27.166+0000] {warnings.py:112} WARNING - /opt/***/dags/tasks/etl_store/extract_data_nds.py:12: FutureWarning: Starting with pandas version 3.0 all arguments of to_sql except for the arguments 'name' and 'con' will be keyword-only.
+  branch_df.to_sql('dim_branch', df, hook.get_sqlalchemy_engine(), schema='nds', if_exists='replace')
+
+[2024-07-08T15:52:27.167+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2024-07-08T15:52:27.167+0000] {taskinstance.py:2905} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 465, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 432, in _execute_callable
+    return execute_callable(context=context, **execute_callable_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/baseoperator.py", line 401, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 235, in execute
+    return_value = self.execute_callable()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 252, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/airflow/dags/tasks/etl_store/extract_data_nds.py", line 69, in dim_nds
+    dim_branch(df, hook)
+  File "/opt/airflow/dags/tasks/etl_store/extract_data_nds.py", line 12, in dim_branch
+    branch_df.to_sql('dim_branch', df, hook.get_sqlalchemy_engine(), schema='nds', if_exists='replace')
+  File "/home/airflow/.local/lib/python3.12/site-packages/pandas/util/_decorators.py", line 333, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+TypeError: NDFrame.to_sql() got multiple values for argument 'schema'
+[2024-07-08T15:52:27.185+0000] {taskinstance.py:1206} INFO - Marking task as FAILED. dag_id=etl_store, task_id=nds-load, run_id=manual__2024-07-08T15:52:19.670180+00:00, execution_date=20240708T155219, start_date=20240708T155226, end_date=20240708T155227
+[2024-07-08T15:52:27.206+0000] {standard_task_runner.py:110} ERROR - Failed to execute job 27 for task nds-load (NDFrame.to_sql() got multiple values for argument 'schema'; 78)
+[2024-07-08T15:52:27.217+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 1
+[2024-07-08T15:52:27.231+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/models/baseoperator.py:1297: AirflowProviderDeprecationWarning: Call to deprecated class PostgresOperator. (Please use `***.providers.common.sql.operators.sql.SQLExecuteQueryOperator`.Also, you can provide `hook_params={'schema': <database>}`.)
+  result = cls.__new__(cls)
+
+[2024-07-08T15:52:27.246+0000] {taskinstance.py:3503} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2024-07-08T15:52:27.251+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

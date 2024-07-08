@@ -1,0 +1,97 @@
+[2024-07-08T16:05:35.232+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2024-07-08T16:05:35.264+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: etl_store.dds-load manual__2024-07-08T16:04:38.338394+00:00 [queued]>
+[2024-07-08T16:05:35.280+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: etl_store.dds-load manual__2024-07-08T16:04:38.338394+00:00 [queued]>
+[2024-07-08T16:05:35.281+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 1
+[2024-07-08T16:05:35.299+0000] {taskinstance.py:2330} INFO - Executing <Task(PostgresOperator): dds-load> on 2024-07-08 16:04:38.338394+00:00
+[2024-07-08T16:05:35.308+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:61: DeprecationWarning: This process (pid=290) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2024-07-08T16:05:35.310+0000] {standard_task_runner.py:63} INFO - Started process 292 to run task
+[2024-07-08T16:05:35.310+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'etl_store', 'dds-load', 'manual__2024-07-08T16:04:38.338394+00:00', '--job-id', '42', '--raw', '--subdir', 'DAGS_FOLDER/etl_store.py', '--cfg-path', '/tmp/tmpau3qt4mb']
+[2024-07-08T16:05:35.315+0000] {standard_task_runner.py:91} INFO - Job 42: Subtask dds-load
+[2024-07-08T16:05:35.394+0000] {task_command.py:426} INFO - Running <TaskInstance: etl_store.dds-load manual__2024-07-08T16:04:38.338394+00:00 [running]> on host a58d746d8a30
+[2024-07-08T16:05:35.539+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='etl_store' AIRFLOW_CTX_TASK_ID='dds-load' AIRFLOW_CTX_EXECUTION_DATE='2024-07-08T16:04:38.338394+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='manual__2024-07-08T16:04:38.338394+00:00'
+[2024-07-08T16:05:35.540+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2024-07-08T16:05:35.556+0000] {sql.py:276} INFO - Executing: 
+    insert into dds.dim_branch (branch)
+        (select branch from nds.dim_branch where branch not in (select branch from dds.dim_branch));
+
+    insert into dds.dim_city (city)
+        (select city from nds.dim_city where city not in (select city from dds.dim_city));
+
+    insert into dds.dim_customer_type (customer_type)
+        (select customer_type from nds.dim_customer_type where customer_type not in (select customer_type from dds.dim_customer_type));
+
+    insert into dds.dim_gender (gender)
+        (select gender from nds.dim_gender where gender not in (select gender from dds.dim_gender));
+
+    insert into dds.dim_product_line (product_line)
+        (select product_line from nds.dim_product_line where product_line not in (select product_line from dds.dim_product_line));
+    
+    insert into dds.dim_payment (payment)
+        (select payment from nds.dim_payment where payment not in (select payment from dds.dim_payment));
+
+    insert into dds.fact_sales (invoice_id, branch, city, customer_type, gender, product_line, unit_price, quantity, "tax_5%",
+        total, date, time, payment, cogs, gross_margin_percentage, gross_income, rating)
+        (select distinct 
+            invoice_id, branch, city, customer_type, gender, 
+            product_line, unit_price, quantity, "tax_5%", total, date::date,
+            time, payment, cogs, gross_margin_percentage, gross_income, rating 
+        from nds.fact_sales where invoice_id not in (select distinct invoice_id FROM dds.fact_sales));
+[2024-07-08T16:05:35.571+0000] {base.py:84} INFO - Using connection ID 'postgres-netology' for task execution.
+[2024-07-08T16:05:35.582+0000] {base.py:84} INFO - Using connection ID 'postgres-netology' for task execution.
+[2024-07-08T16:05:35.602+0000] {sql.py:487} INFO - Running statement: 
+    insert into dds.dim_branch (branch)
+        (select branch from nds.dim_branch where branch not in (select branch from dds.dim_branch));
+
+    insert into dds.dim_city (city)
+        (select city from nds.dim_city where city not in (select city from dds.dim_city));
+
+    insert into dds.dim_customer_type (customer_type)
+        (select customer_type from nds.dim_customer_type where customer_type not in (select customer_type from dds.dim_customer_type));
+
+    insert into dds.dim_gender (gender)
+        (select gender from nds.dim_gender where gender not in (select gender from dds.dim_gender));
+
+    insert into dds.dim_product_line (product_line)
+        (select product_line from nds.dim_product_line where product_line not in (select product_line from dds.dim_product_line));
+    
+    insert into dds.dim_payment (payment)
+        (select payment from nds.dim_payment where payment not in (select payment from dds.dim_payment));
+
+    insert into dds.fact_sales (invoice_id, branch, city, customer_type, gender, product_line, unit_price, quantity, "tax_5%",
+        total, date, time, payment, cogs, gross_margin_percentage, gross_income, rating)
+        (select distinct 
+            invoice_id, branch, city, customer_type, gender, 
+            product_line, unit_price, quantity, "tax_5%", total, date::date,
+            time, payment, cogs, gross_margin_percentage, gross_income, rating 
+        from nds.fact_sales where invoice_id not in (select distinct invoice_id FROM dds.fact_sales));, parameters: None
+[2024-07-08T16:05:35.615+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2024-07-08T16:05:35.615+0000] {taskinstance.py:2905} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 465, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 432, in _execute_callable
+    return execute_callable(context=context, **execute_callable_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/baseoperator.py", line 401, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/providers/common/sql/operators/sql.py", line 282, in execute
+    output = hook.run(
+             ^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/providers/common/sql/hooks/sql.py", line 435, in run
+    self._run_command(cur, sql_statement, parameters)
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/providers/common/sql/hooks/sql.py", line 492, in _run_command
+    cur.execute(sql_statement)
+psycopg2.errors.ForeignKeyViolation: insert or update on table "fact_sales" violates foreign key constraint "fact_sales_customer_type_fkey"
+DETAIL:  Key (customer_type)=(0) is not present in table "dim_customer_type".
+
+[2024-07-08T16:05:35.629+0000] {taskinstance.py:1206} INFO - Marking task as FAILED. dag_id=etl_store, task_id=dds-load, run_id=manual__2024-07-08T16:04:38.338394+00:00, execution_date=20240708T160438, start_date=20240708T160535, end_date=20240708T160535
+[2024-07-08T16:05:35.642+0000] {standard_task_runner.py:110} ERROR - Failed to execute job 42 for task dds-load (insert or update on table "fact_sales" violates foreign key constraint "fact_sales_customer_type_fkey"
+DETAIL:  Key (customer_type)=(0) is not present in table "dim_customer_type".
+; 292)
+[2024-07-08T16:05:35.689+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 1
+[2024-07-08T16:05:35.714+0000] {taskinstance.py:3503} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2024-07-08T16:05:35.717+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

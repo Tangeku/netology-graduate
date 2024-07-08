@@ -1,0 +1,214 @@
+[2024-07-08T16:33:05.724+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2024-07-08T16:33:05.752+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: etl_store.dds-create manual__2024-07-08T16:18:08.118541+00:00 [queued]>
+[2024-07-08T16:33:05.760+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: etl_store.dds-create manual__2024-07-08T16:18:08.118541+00:00 [queued]>
+[2024-07-08T16:33:05.761+0000] {taskinstance.py:2306} INFO - Starting attempt 6 of 6
+[2024-07-08T16:33:05.775+0000] {taskinstance.py:2330} INFO - Executing <Task(PostgresOperator): dds-create> on 2024-07-08 16:18:08.118541+00:00
+[2024-07-08T16:33:05.781+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:61: DeprecationWarning: This process (pid=755) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2024-07-08T16:33:05.784+0000] {standard_task_runner.py:63} INFO - Started process 757 to run task
+[2024-07-08T16:33:05.784+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'etl_store', 'dds-create', 'manual__2024-07-08T16:18:08.118541+00:00', '--job-id', '80', '--raw', '--subdir', 'DAGS_FOLDER/etl_store.py', '--cfg-path', '/tmp/tmpqaom4tvb']
+[2024-07-08T16:33:05.786+0000] {standard_task_runner.py:91} INFO - Job 80: Subtask dds-create
+[2024-07-08T16:33:05.842+0000] {task_command.py:426} INFO - Running <TaskInstance: etl_store.dds-create manual__2024-07-08T16:18:08.118541+00:00 [running]> on host a58d746d8a30
+[2024-07-08T16:33:05.943+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='etl_store' AIRFLOW_CTX_TASK_ID='dds-create' AIRFLOW_CTX_EXECUTION_DATE='2024-07-08T16:18:08.118541+00:00' AIRFLOW_CTX_TRY_NUMBER='6' AIRFLOW_CTX_DAG_RUN_ID='manual__2024-07-08T16:18:08.118541+00:00'
+[2024-07-08T16:33:05.945+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2024-07-08T16:33:05.960+0000] {sql.py:276} INFO - Executing: 
+
+    -- Создание таблиц dds
+    create table if not exists dds.dim_branch(
+        id serial primary key,
+        branch varchar(3) not null
+    );
+
+    create table if not exists dds.dim_city(
+        id serial primary key,
+        city varchar(150) not null
+    );
+
+    create table if not exists dds.dim_customer_type(
+        id serial primary key,
+        customer_type varchar(10) not null
+    );
+
+    create table if not exists dds.dim_gender(
+        id serial primary key,
+        gender varchar(10) not null
+    );
+
+    create table if not exists dds.dim_product_line(
+        id serial primary key,
+        product_line varchar(150) not null
+    );
+
+    create table if not exists dds.dim_payment(
+        id serial primary key,
+        payment varchar(150) not null
+    );
+
+    create table if not exists dds.dim_date as
+        with array_date as (
+            select dd::date as dt
+            from generate_series('2000-01-01'::timestamp,'2050-01-01'::timestamp,'1 day'::interval) dd
+        )
+        select
+            dt as date,
+            date_part('week', dt)::int as week_of_year,
+            date_trunc('week', dt)::date as week_start,
+            date_part('isodow', dt)::int as day_of_week,
+            date_part('month', dt)::int as month_number,
+            to_char(dt::timestamp, 'Month') as month_name,
+            extract(quarter from dt) as quarter,
+            date_part('isoyear', dt)::int as year
+        from array_date;
+        alter table dds.dim_date drop constraint if exists dim_date_pkey cascade;
+        alter table dds.dim_date add constraint dim_date_pkey primary key (date);
+            
+    create table if not exists dds.dim_time as
+        with array_time as (
+            select 
+                tt::time as t
+            from generate_series(current_date, current_date + '1 day - 1 second'::interval,'1 minute') tt
+        ),
+        array_part as (
+            select
+                t as time
+            from array_time order by t
+        )
+        select time,
+                case
+                    when (time >= '00:00:00'::time AND time < '06:00:00'::time) then 'night'
+                    when (time >= '06:00:00'::time AND time < '11:00:00'::time) then 'morning'
+                    when (time >= '11:00:00'::time AND time < '17:00:00'::time) then 'noon'
+                    when (time >= '17:00:00'::time AND time < '22:00:00'::time) then 'evening'
+                    when (time >= '22:00:00'::time AND time < '24:00:00'::time) then 'night'
+                end as date_part 
+        from array_part;
+        alter table dds.dim_time drop constraint if exists dim_time_pkey cascade;
+        alter table dds.dim_time add constraint dim_time_pkey primary key (time);
+
+    create table if not exists dds.fact_sales(
+        invoice_id varchar(15) PRIMARY KEY,
+        branch int not null references dds.dim_branch(id),
+        city int not null references dds.dim_city(id),
+        customer_type int not null references dds.dim_customer_type(id),
+        gender int not null references dds.dim_gender(id),
+        product_line int not null references dds.dim_product_line(id),
+        unit_price double precision,
+        quantity double precision,
+        "tax_5%" double precision,
+        total double precision,
+        date date not null,
+        time time not null,
+        payment int not null references dds.dim_payment(id),
+        cogs double precision,
+        gross_margin_percentage double precision,
+        gross_income double precision,
+        rating double precision
+    );
+    alter table dds.fact_sales add constraint fact_sales_date_fkey foreign key (date) references dds.dim_date(date);
+    alter table dds.fact_sales add constraint fact_sales_time_fkey foreign key (time) references dds.dim_time(time);   
+[2024-07-08T16:33:05.973+0000] {base.py:84} INFO - Using connection ID 'postgres-netology' for task execution.
+[2024-07-08T16:33:05.984+0000] {base.py:84} INFO - Using connection ID 'postgres-netology' for task execution.
+[2024-07-08T16:33:06.001+0000] {sql.py:487} INFO - Running statement: 
+
+    -- Создание таблиц dds
+    create table if not exists dds.dim_branch(
+        id serial primary key,
+        branch varchar(3) not null
+    );
+
+    create table if not exists dds.dim_city(
+        id serial primary key,
+        city varchar(150) not null
+    );
+
+    create table if not exists dds.dim_customer_type(
+        id serial primary key,
+        customer_type varchar(10) not null
+    );
+
+    create table if not exists dds.dim_gender(
+        id serial primary key,
+        gender varchar(10) not null
+    );
+
+    create table if not exists dds.dim_product_line(
+        id serial primary key,
+        product_line varchar(150) not null
+    );
+
+    create table if not exists dds.dim_payment(
+        id serial primary key,
+        payment varchar(150) not null
+    );
+
+    create table if not exists dds.dim_date as
+        with array_date as (
+            select dd::date as dt
+            from generate_series('2000-01-01'::timestamp,'2050-01-01'::timestamp,'1 day'::interval) dd
+        )
+        select
+            dt as date,
+            date_part('week', dt)::int as week_of_year,
+            date_trunc('week', dt)::date as week_start,
+            date_part('isodow', dt)::int as day_of_week,
+            date_part('month', dt)::int as month_number,
+            to_char(dt::timestamp, 'Month') as month_name,
+            extract(quarter from dt) as quarter,
+            date_part('isoyear', dt)::int as year
+        from array_date;
+        alter table dds.dim_date drop constraint if exists dim_date_pkey cascade;
+        alter table dds.dim_date add constraint dim_date_pkey primary key (date);
+            
+    create table if not exists dds.dim_time as
+        with array_time as (
+            select 
+                tt::time as t
+            from generate_series(current_date, current_date + '1 day - 1 second'::interval,'1 minute') tt
+        ),
+        array_part as (
+            select
+                t as time
+            from array_time order by t
+        )
+        select time,
+                case
+                    when (time >= '00:00:00'::time AND time < '06:00:00'::time) then 'night'
+                    when (time >= '06:00:00'::time AND time < '11:00:00'::time) then 'morning'
+                    when (time >= '11:00:00'::time AND time < '17:00:00'::time) then 'noon'
+                    when (time >= '17:00:00'::time AND time < '22:00:00'::time) then 'evening'
+                    when (time >= '22:00:00'::time AND time < '24:00:00'::time) then 'night'
+                end as date_part 
+        from array_part;
+        alter table dds.dim_time drop constraint if exists dim_time_pkey cascade;
+        alter table dds.dim_time add constraint dim_time_pkey primary key (time);
+
+    create table if not exists dds.fact_sales(
+        invoice_id varchar(15) PRIMARY KEY,
+        branch int not null references dds.dim_branch(id),
+        city int not null references dds.dim_city(id),
+        customer_type int not null references dds.dim_customer_type(id),
+        gender int not null references dds.dim_gender(id),
+        product_line int not null references dds.dim_product_line(id),
+        unit_price double precision,
+        quantity double precision,
+        "tax_5%" double precision,
+        total double precision,
+        date date not null,
+        time time not null,
+        payment int not null references dds.dim_payment(id),
+        cogs double precision,
+        gross_margin_percentage double precision,
+        gross_income double precision,
+        rating double precision
+    );
+    alter table dds.fact_sales add constraint fact_sales_date_fkey foreign key (date) references dds.dim_date(date);
+    alter table dds.fact_sales add constraint fact_sales_time_fkey foreign key (time) references dds.dim_time(time);   , parameters: None
+[2024-07-08T16:33:06.117+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2024-07-08T16:33:06.130+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=etl_store, task_id=dds-create, run_id=manual__2024-07-08T16:18:08.118541+00:00, execution_date=20240708T161808, start_date=20240708T163305, end_date=20240708T163306
+[2024-07-08T16:33:06.159+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 0
+[2024-07-08T16:33:06.173+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/models/baseoperator.py:1297: AirflowProviderDeprecationWarning: Call to deprecated class PostgresOperator. (Please use `***.providers.common.sql.operators.sql.SQLExecuteQueryOperator`.Also, you can provide `hook_params={'schema': <database>}`.)
+  result = cls.__new__(cls)
+
+[2024-07-08T16:33:06.190+0000] {taskinstance.py:3503} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2024-07-08T16:33:06.192+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

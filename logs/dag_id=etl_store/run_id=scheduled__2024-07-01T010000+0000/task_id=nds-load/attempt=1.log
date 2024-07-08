@@ -1,0 +1,23 @@
+[2024-07-08T15:15:35.903+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2024-07-08T15:15:36.060+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: etl_store.nds-load scheduled__2024-07-01T01:00:00+00:00 [queued]>
+[2024-07-08T15:15:36.104+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: etl_store.nds-load scheduled__2024-07-01T01:00:00+00:00 [queued]>
+[2024-07-08T15:15:36.108+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 1
+[2024-07-08T15:15:36.191+0000] {taskinstance.py:2330} INFO - Executing <Task(PythonOperator): nds-load> on 2024-07-01 01:00:00+00:00
+[2024-07-08T15:15:36.209+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/task/task_runner/standard_task_runner.py:61: DeprecationWarning: This process (pid=76) is multi-threaded, use of fork() may lead to deadlocks in the child.
+  pid = os.fork()
+
+[2024-07-08T15:15:36.210+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'etl_store', 'nds-load', 'scheduled__2024-07-01T01:00:00+00:00', '--job-id', '15', '--raw', '--subdir', 'DAGS_FOLDER/etl_store.py', '--cfg-path', '/tmp/tmp8vw3kecy']
+[2024-07-08T15:15:36.216+0000] {standard_task_runner.py:63} INFO - Started process 86 to run task
+[2024-07-08T15:15:36.216+0000] {standard_task_runner.py:91} INFO - Job 15: Subtask nds-load
+[2024-07-08T15:15:51.183+0000] {cli_action_loggers.py:137} WARNING - Failed to log action (psycopg2.OperationalError) could not translate host name "postgres" to address: Temporary failure in name resolution
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+[2024-07-08T15:16:08.754+0000] {standard_task_runner.py:110} ERROR - Failed to execute job 15 for task nds-load ((psycopg2.OperationalError) could not translate host name "postgres" to address: Temporary failure in name resolution
+
+(Background on this error at: https://sqlalche.me/e/14/e3q8); 86)
+[2024-07-08T15:16:19.982+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 1
+[2024-07-08T15:16:20.022+0000] {warnings.py:112} WARNING - /home/***/.local/lib/python3.12/site-packages/***/models/baseoperator.py:1297: AirflowProviderDeprecationWarning: Call to deprecated class PostgresOperator. (Please use `***.providers.common.sql.operators.sql.SQLExecuteQueryOperator`.Also, you can provide `hook_params={'schema': <database>}`.)
+  result = cls.__new__(cls)
+
+[2024-07-08T15:16:20.045+0000] {taskinstance.py:3503} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2024-07-08T15:16:20.049+0000] {local_task_job_runner.py:222} INFO - ::endgroup::
